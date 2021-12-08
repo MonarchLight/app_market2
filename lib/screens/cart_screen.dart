@@ -1,6 +1,6 @@
-import 'package:app_market2/providers/orders.dart';
-
+import '../providers/orders.dart';
 import '../providers/cart.dart';
+
 import '../widgets/cart_items.dart';
 
 import 'package:flutter/material.dart';
