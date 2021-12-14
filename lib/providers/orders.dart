@@ -29,15 +29,25 @@ class Orders with ChangeNotifier {
     final response = await http.get(url);
     final extractedData = json.decode(response.body);
     final List<OrderItem> loadedProducts = [];
-    extractedData.forEach((prodId, prodData) {
+    if (extractedData == null) {
+      return;
+    }
+    extractedData.forEach((orderId, orderData) {
       loadedProducts.add(OrderItem(
-        id: prodId,
-        amount: prodData["amount"],
-        dateTime: prodData["dateTime"],
-        product: prodData(),
+        id: orderId,
+        amount: orderData["amount"],
+        dateTime: DateTime.parse(orderData["dateTime"]),
+        product: (orderData["product"] as List<dynamic>)
+            .map((item) => CartItem(
+                  id: item["id"],
+                  price: item["price"],
+                  quantity: item["quantity"],
+                  title: item["title"],
+                ))
+            .toList(),
       ));
     });
-    _orders = loadedProducts;
+    _orders = loadedProducts.reversed.toList();
     notifyListeners();
   }
 
