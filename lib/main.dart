@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 
+import './screens/auth_screen.dart';
 import './screens/order_screen.dart';
 import './screens/edit_product_screen.dart';
 import '../screens/user_products_screen.dart';
@@ -51,7 +52,7 @@ class _MyAppState extends State<MyApp> {
           canvasColor: Colors.blue[50],
           fontFamily: "Anton",
         ),
-        home: ProductsOverviewScreen(),
+        home: AuthScreen(),
         routes: {
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),
