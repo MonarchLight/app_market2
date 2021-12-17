@@ -25,12 +25,12 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFavoriteStatus() async {
+  Future<void> toggleFavoriteStatus(String token) async {
     final oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
     final url = Uri.parse(
-        "https://flutter-project-5d3e7-default-rtdb.europe-west1.firebasedatabase.app/products.json");
+        "https://flutter-project-5d3e7-default-rtdb.europe-west1.firebasedatabase.app/products.json?auth=$token");
     try {
       final respone = await http.patch(
         url,
