@@ -36,28 +36,25 @@ class ProductsProvider with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  String? authToken;
+  String? _authToken;
   String? userId;
-
-  set auth(token) {
-    this.authToken = token;
-    notifyListeners();
-  }
-
-  set userIdd(id) {
-    this.userId = id;
-    notifyListeners();
+  void update(String token) {
+    _authToken = token;
   }
 
   Future<void> fetchAndSetProducts() async {
-    final url = Uri.parse(
-        "https://flutter-project-5d3e7-default-rtdb.europe-west1.firebasedatabase.app/products.json"); //?auth=$authToken
+    var url = Uri.parse(
+        "https://flutter-project-5d3e7-default-rtdb.europe-west1.firebasedatabase.app/products.json?auth=$_authToken");
     try {
       final response = await http.get(url);
-      final extractedData = json.decode(response.body);
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
       if (extractedData == null) {
         return;
       }
+      url = Uri.parse(
+          "https://flutter-project-5d3e7-default-rtdb.europe-west1.firebasedatabase.app/userFavorites/$userId.json?auth=$_authToken");
+      final favoriteResonse = await http.get(url);
+      final favoriteData = json.decode(favoriteResonse.body);
       final List<Product> loadedProducts = [];
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(Product(
@@ -65,7 +62,7 @@ class ProductsProvider with ChangeNotifier {
           title: prodData['title'],
           description: prodData['description'],
           price: prodData['price'],
-          isFavorite: prodData['isFavorite'],
+          isFavorite: favoriteData == null ? false : prodData[prodId] ?? false,
           imageUrl: prodData['imageUrl'],
         ));
       });
@@ -78,7 +75,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     final url = Uri.parse(
-        "https://flutter-project-5d3e7-default-rtdb.europe-west1.firebasedatabase.app/products.json?auth=$authToken");
+        "https://flutter-project-5d3e7-default-rtdb.europe-west1.firebasedatabase.app/products.json?auth=$_authToken");
     try {
       final response = await http.post(
         url,
@@ -87,7 +84,6 @@ class ProductsProvider with ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'price': product.price,
-          'isFavorite': product.isFavorite,
         }),
       );
       final newProduct = Product(
@@ -109,7 +105,7 @@ class ProductsProvider with ChangeNotifier {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
       final url = Uri.parse(
-          "https://flutter-project-5d3e7-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json?auth=$authToken");
+          "https://flutter-project-5d3e7-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json?auth=$_authToken");
       await http.patch(url,
           body: json.encode({
             'title': newProduct.title,
@@ -125,9 +121,11 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     final url = Uri.parse(
-        "https://flutter-project-5d3e7-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json?auth=$authToken");
+        "https://flutter-project-5d3e7-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json?auth=$_authToken");
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     Product? existingProduct = _items[existingProductIndex];
+    _items.removeAt(existingProductIndex);
+    notifyListeners();
 
     final response = await http.delete(url);
     if (response.statusCode >= 400) {

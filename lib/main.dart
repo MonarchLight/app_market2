@@ -40,32 +40,49 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(
             create: (ctx) => Auth(),
           ),
-          ChangeNotifierProvider(
-            create: (ctx) => ProductsProvider(),
-          ),
-          ChangeNotifierProvider(
-            create: (ctx) => Orders(),
-          ),
-          /*ChangeNotifierProxyProvider<Auth, ProductsProvider>(
-              create: (ctx) => ProductsProvider(),
-              update: (ctx, auth, previousProductsProvider) {
-                previousProductsProvider!.auth = auth.token;
-                previousProductsProvider.userIdd = auth.userId;
-                //previousProductsProvider.items;
-                return previousProductsProvider;
-              }),*/
+
           ChangeNotifierProvider(
             create: (ctx) => Cart(),
           ),
-          /*ChangeNotifierProxyProvider<Auth, Orders>(
+
+          //-----------------------------------------------------
+          ChangeNotifierProxyProvider<Auth, ProductsProvider>(
+            create: (ctx) => ProductsProvider(),
+            update: (ctx, auth, prevProducts) =>
+                prevProducts!..update(auth.token),
+          ),
+
+          ChangeNotifierProxyProvider<Auth, Orders>(
+            create: (ctx) => Orders(),
+            update: (ctx, auth, prevProducts) =>
+                prevProducts!..update(auth.token),
+          ),
+          //--------------------------------------------------------
+
+          //------------------------------------------------------
+          // provider: ^6.0.1
+          //------------------------------------------------------
+/*
+         
+          ChangeNotifierProxyProvider<Auth, ProductsProvider>(
+              create: (ctx) => ProductsProvider(),
+              update: (ctx, auth, previousProductsProvider) {
+                previousProductsProvider!.auth = auth.token;
+                // previousProductsProvider.userIdd = auth.userId;
+                //previousProductsProvider.items;
+                return previousProductsProvider;
+              }),
+          ChangeNotifierProxyProvider<Auth, Orders>(
             create: (ctx) => Orders(),
             update: (ctx, auth, previousProductsProvider) {
               previousProductsProvider!.auth = auth.token;
-              previousProductsProvider.userIdd = auth.userId;
+              // previousProductsProvider.userIdd = auth.userId;
               //previousProductsProvider.orders;
               return previousProductsProvider;
             },
-          ),*/
+          ),
+*/
+          //------------------------------------------------------
         ],
         child: Consumer<Auth>(
           builder: (ctx, auth, _) => MaterialApp(

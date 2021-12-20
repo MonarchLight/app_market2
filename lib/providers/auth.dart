@@ -10,7 +10,7 @@ class Auth with ChangeNotifier {
   String? _userId;
 
   bool get isAuth {
-    return token != "";
+    return token != null;
   }
 
   String get userId {
@@ -44,7 +44,7 @@ class Auth with ChangeNotifier {
             "password": password,
             "returnSecureToken": true,
           }));
-      final responseData = json.decode(response.body);
+      final responseData = json.decode(response.body) as Map<String, dynamic>;
       if (responseData["error"] != null) {
         throw HttpException(responseData["error"]["message"]);
       }
