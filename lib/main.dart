@@ -49,13 +49,13 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProxyProvider<Auth, ProductsProvider>(
             create: (ctx) => ProductsProvider(),
             update: (ctx, auth, prevProducts) =>
-                prevProducts!..update(auth.token),
+                prevProducts!..update(auth.token, auth.userId),
           ),
 
           ChangeNotifierProxyProvider<Auth, Orders>(
             create: (ctx) => Orders(),
             update: (ctx, auth, prevProducts) =>
-                prevProducts!..update(auth.token),
+                prevProducts!..update(auth.token, auth.userId),
           ),
           //--------------------------------------------------------
 
