@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import '../models/http_exception.dart';
 
 import '../providers/auth.dart';
@@ -93,7 +95,8 @@ class AuthCard extends StatefulWidget {
   _AuthCardState createState() => _AuthCardState();
 }
 
-class _AuthCardState extends State<AuthCard> {
+class _AuthCardState extends State<AuthCard>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
@@ -102,6 +105,20 @@ class _AuthCardState extends State<AuthCard> {
   };
   var _isLoading = false;
   final _passwordController = TextEditingController();
+
+  AnimationController? _controller;
+  Animation<Size>? _heightAnimation;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+        vsync: this,
+        duration: Duration(
+          microseconds: 300,
+        ));
+    //_heightAnimation = Tween<Size>(begin: double.infinity, 260), end: Size(double.infinity,));
+    super.initState();
+  }
 
   void _showErrorDialog(String message) {
     showDialog(

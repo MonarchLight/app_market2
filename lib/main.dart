@@ -1,3 +1,5 @@
+import './screens/splash_screen.dart';
+
 import './screens/products_overview_screen.dart';
 import './screens/auth_screen.dart';
 import './screens/order_screen.dart';
@@ -94,7 +96,16 @@ class _MyAppState extends State<MyApp> {
               canvasColor: Colors.blue[50],
               fontFamily: "Anton",
             ),
-            home: auth.isAuth ? ProductsOverviewScreen() : AuthScreen(),
+            home: auth.isAuth
+                ? ProductsOverviewScreen()
+                : FutureBuilder(
+                    future: auth.tryAutoLogin(),
+                    builder: (ctx, authResultSnapshot) =>
+                        authResultSnapshot.connectionState ==
+                                ConnectionState.waiting
+                            ? SplashScreen()
+                            : AuthScreen(),
+                  ),
             routes: {
               ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
               CartScreen.routeName: (ctx) => CartScreen(),
