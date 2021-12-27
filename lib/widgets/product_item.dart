@@ -25,15 +25,17 @@ class ProductItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         child: GridTile(
           child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(ProductDetailScreen.routeName,
-                  arguments: product.id);
-            },
-            child: Image.network(
-              product.imageUrl,
-              fit: BoxFit.cover,
-            ),
-          ),
+              onTap: () {
+                Navigator.of(context).pushNamed(ProductDetailScreen.routeName,
+                    arguments: product.id);
+              },
+              child: Hero(
+                tag: product.id,
+                child: FadeInImage(
+                  placeholder: AssetImage("/images/prod.png"),
+                  image: NetworkImage(product.imageUrl),
+                ),
+              )),
           footer: GridTileBar(
             leading: Consumer<Product>(
               builder: (ctx, product, _) => IconButton(

@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ProductDetailScreen extends StatelessWidget {
+  static const routeName = "/product-detail";
   /*final String title;
   final double price;
 
   ProductDetailScreen(this.price, this.title);*/
-
-  static const routeName = "/product-detail";
 
   @override
   Widget build(BuildContext context) {
@@ -32,20 +31,27 @@ class ProductDetailScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         title: Text(loadedProduct.title),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              height: 300,
-              width: double.infinity,
-              child: Image.network(
-                loadedProduct.imageUrl,
-                fit: BoxFit.cover,
+      ),*/
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 300,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(loadedProduct.title),
+              background: Hero(
+                tag: loadedProduct.id,
+                child: Image.network(
+                  loadedProduct.imageUrl,
+                  //fit: BoxFit.cover,
+                ),
               ),
             ),
+          ),
+          SliverList(
+              delegate: SliverChildListDelegate([
             SizedBox(
               height: 10,
             ),
@@ -54,8 +60,8 @@ class ProductDetailScreen extends StatelessWidget {
               height: 10,
             ),
             description(loadedProduct.description),
-          ],
-        ),
+          ])),
+        ],
       ),
     );
   }
