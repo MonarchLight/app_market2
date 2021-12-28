@@ -5,6 +5,7 @@ class CustomRoute<T> extends MaterialPageRoute<T> {
     WidgetBuilder? builder,
     RouteSettings? setting,
   }) : super(builder: builder!, settings: setting);
+
   @override
   Widget buildTransitions(
     BuildContext context,
@@ -12,8 +13,31 @@ class CustomRoute<T> extends MaterialPageRoute<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    // TODO: implement buildTransitions
-    return super
-        .buildTransitions(context, animation, secondaryAnimation, child);
+    if (settings.name == '/') {
+      return child;
+    }
+    return FadeTransition(
+      opacity: animation,
+      child: child,
+    );
+  }
+}
+
+class CustomPageTransitionBuilder extends PageTransitionsBuilder {
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    if (route.settings.name == '/') {
+      return child;
+    }
+    return FadeTransition(
+      opacity: animation,
+      child: child,
+    );
   }
 }

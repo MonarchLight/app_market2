@@ -1,3 +1,5 @@
+import 'package:app_market2/helpers/custom_route.dart';
+
 import './screens/splash_screen.dart';
 
 import './screens/products_overview_screen.dart';
@@ -42,49 +44,19 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(
             create: (ctx) => Auth(),
           ),
-
           ChangeNotifierProvider(
             create: (ctx) => Cart(),
           ),
-
-          //-----------------------------------------------------
           ChangeNotifierProxyProvider<Auth, ProductsProvider>(
             create: (ctx) => ProductsProvider(),
             update: (ctx, auth, prevProducts) =>
                 prevProducts!..update(auth.token, auth.userId),
           ),
-
           ChangeNotifierProxyProvider<Auth, Orders>(
             create: (ctx) => Orders(),
             update: (ctx, auth, prevProducts) =>
                 prevProducts!..update(auth.token, auth.userId),
           ),
-          //--------------------------------------------------------
-
-          //------------------------------------------------------
-          // provider: ^6.0.1
-          //------------------------------------------------------
-/*
-         
-          ChangeNotifierProxyProvider<Auth, ProductsProvider>(
-              create: (ctx) => ProductsProvider(),
-              update: (ctx, auth, previousProductsProvider) {
-                previousProductsProvider!.auth = auth.token;
-                // previousProductsProvider.userIdd = auth.userId;
-                //previousProductsProvider.items;
-                return previousProductsProvider;
-              }),
-          ChangeNotifierProxyProvider<Auth, Orders>(
-            create: (ctx) => Orders(),
-            update: (ctx, auth, previousProductsProvider) {
-              previousProductsProvider!.auth = auth.token;
-              // previousProductsProvider.userIdd = auth.userId;
-              //previousProductsProvider.orders;
-              return previousProductsProvider;
-            },
-          ),
-*/
-          //------------------------------------------------------
         ],
         child: Consumer<Auth>(
           builder: (ctx, auth, _) => MaterialApp(
@@ -95,6 +67,12 @@ class _MyAppState extends State<MyApp> {
               ),
               canvasColor: Colors.blue[50],
               fontFamily: "Anton",
+              pageTransitionsTheme: PageTransitionsTheme(
+                builders: {
+                  TargetPlatform.android: CustomPageTransitionBuilder(),
+                  TargetPlatform.iOS: CustomPageTransitionBuilder(),
+                },
+              ),
             ),
             home: auth.isAuth
                 ? ProductsOverviewScreen()

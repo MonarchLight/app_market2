@@ -1,3 +1,5 @@
+import 'package:app_market2/helpers/custom_route.dart';
+
 import '../screens/user_products_screen.dart';
 import '../screens/order_screen.dart';
 
@@ -32,6 +34,9 @@ class AppDrawer extends StatelessWidget {
             title: Text("Orders"),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(OrderScreen.routeName);
+              //Navigator.of(context).pushReplacement(CustomRoute(
+              //  builder: (ctx) => OrderScreen(),
+              //));
             },
           ),
           Divider(),
